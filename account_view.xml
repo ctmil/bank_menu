@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<record model="ir.ui.view" id="account_bank_statement_view_form">
+		<field name="name">account.bank.statement.view.form</field>
+		<field name="model">account.bank.statement</field>
+		<field name="inherit_id" ref="account.view_bank_statement_form"></field>
+		<field name="arch" type="xml">
+			<field name="state" position="before">
+				<button name="btn_import_file" string="Importar Archivo" 
+					attrs="{'invisible': [('processed_file','=',True)]}"
+					type="object"></button>
+			</field>
+			<notebook>
+				<page string="Archivo extracto">
+					<group>
+						<field name="statement_file" widget="binary"
+							attrs="{'readonly': [('processed_file','=',True)]}" />
+						<field name="processed_file"  readonly="1" />
+						<field name="delimiter"   />
+						<field name="total_processed"  /> 
+					</group>
+				</page>
+			</notebook>
+		</field>
+	</record>
+
+
+    <!-- Third Check Menu -->
+    <record model="ir.actions.act_window" id="action_res_partner_bank">
+        <field name="name">Cuentas Bancarias</field>
+        <field name="res_model">res.partner.bank</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="action_res_partner_bank"
+        id="menu_res_partner_bank"
+        sequence="60"
+        parent="account_payment_fix.menu_finance_bank_and_cash"/>
+
+
+    <!-- Third Check Menu -->
+    <record model="ir.actions.act_window" id="action_res_bank">
+        <field name="name">Bancos</field>
+        <field name="res_model">res.bank</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        action="action_res_bank"
+        id="menu_res_bank"
+        sequence="70"
+        parent="account_payment_fix.menu_finance_bank_and_cash"/>
+
+
+</odoo>
