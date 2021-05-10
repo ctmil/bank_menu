@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+	account.view_account_form
+	<record model="ir.ui.view" id="account_bank_account_account_form">
+		<field name="name">account.bank.account.account.form</field>
+		<field name="model">account.account</field>
+		<field name="inherit_id" ref="account.view_account_form"></field>
+		<field name="arch" type="xml">
+			<field name="tag_ids" position="after">
+				<field name="conciliation_text" />
+			</field>
+		</field>
+	</record>
+
 	<record model="ir.ui.view" id="account_bank_statement_view_form">
 		<field name="name">account.bank.statement.view.form</field>
 		<field name="model">account.bank.statement</field>
@@ -18,10 +30,15 @@
 							attrs="{'readonly': [('processed_file','=',True)]}" />
 						<field name="processed_file"  readonly="1" />
 						<field name="delimiter"   />
+						<field name="xls_or_csv"   />
 						<field name="total_processed"  /> 
 					</group>
 				</page>
 			</notebook>
+			<xpath expr="//field[@name='line_ids']/tree/field[@name='partner_id']" position="after">
+				<field name="account_id" optional="hidden"/>
+				<field name="name" optional="hidden"/>
+			</xpath>
 		</field>
 	</record>
 

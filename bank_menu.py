@@ -7,6 +7,26 @@ import xlrd
 import tempfile
 import binascii
 
+class AccountAccount(models.Model):
+    _inherit = 'account.account'
+
+    conciliation_text = fields.Char('Texto conciliacion')
+
+class AccountBankStatementLine(models.Model):
+    _inherit = 'account.bank.statement.line'
+
+    def write(self,vals):
+        res = super(AccountBankStatementLine, self).write(vals)
+        if 'account_id' in vals:
+            for rec in self:
+                if rec.move_id:
+                    for move_line in rec.move_id.line_ids:
+                        if move_line.account_id.id == rec.statement_id.journal_id.suspense_account_id.id:
+                            move_line.account_id = rec.account_id.id
+
+    account_id = fields.Many2one('account.account',string='Cuenta contable')
+
+
 class AccountBankStatement(models.Model):
     _inherit = 'account.bank.statement'
 
@@ -50,6 +70,9 @@ class AccountBankStatement(models.Model):
                     'statement_id': self.id,
                     }
                 bank_line_id = self.env['account.bank.statement.line'].create(vals)
+                account_id = self.env['account.account'].search([('conciliation_text','=', sheet.cell_value(row_no,1))])
+                if account_id:
+                    bank_line_id.account_id = account_id.id
 
 
 
